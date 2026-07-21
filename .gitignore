@@ -1,0 +1,11 @@
+# Datos de negocio — NO subir al repo.
+# Contienen costos, márgenes, precios de compra y SKUs internos.
+*.xlsx
+*.xls
+*.csv
+
+# Capturas y temporales
+*.png
+.playwright-mcp/
+.DS_Store
+Thumbs.db

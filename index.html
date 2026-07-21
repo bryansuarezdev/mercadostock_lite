@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mercadostock_lite — Sincronización de stock</title>
+<meta name="color-scheme" content="dark">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="badge">ms</div>
+  <div class="brand">mercadostock<span class="slash">_</span><span class="sub">lite</span></div>
+  <div class="spacer"></div>
+  <div class="today" id="today"></div>
+  <div class="chip" id="chipRules">—</div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Sincronización de publicaciones</h1>
+    <p>Cruza el stock de tu bodega con las publicaciones de Mercado Libre por SKU y devuelve el mismo Excel, listo para reimportar.</p>
+    <div class="logic" id="logic">—</div>
+  </div>
+
+  <div class="card">
+    <div class="step">Paso 01</div>
+    <h2>Archivos</h2>
+    <p class="desc">Ambos se procesan en tu navegador: nada se sube a ningún servidor.</p>
+    <div class="drops">
+      <div class="drop" id="dMeli">
+        <div class="ico">🛒</div>
+        <div class="lbl">Excel de Mercado Libre</div>
+        <div class="hint">Publicaciones-FECHA.xlsx</div>
+      </div>
+      <div class="drop" id="dStock">
+        <div class="ico">📦</div>
+        <div class="lbl">Excel de stock — bodega</div>
+        <div class="hint">Stock-actual_BODEGA_FECHA.xlsx</div>
+      </div>
+    </div>
+    <input type="file" id="fMeli" accept=".xlsx" class="hide">
+    <input type="file" id="fStock" accept=".xlsx" class="hide">
+    <div class="note" id="srcWrap" style="display:none">
+      Columna de stock a usar desde bodega: <select id="srcCol"></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="step">Paso 02</div>
+    <h2>Reglas</h2>
+    <p class="desc">Se evalúan de arriba hacia abajo; gana la primera que se cumple. Quedan guardadas para la próxima vez.</p>
+    <table class="rules"><tbody id="rules"></tbody></table>
+    <div style="margin-top:14px;display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+      <button id="addRule">+ Agregar regla</button>
+      <button id="resetRules">Restaurar por defecto</button>
+    </div>
+    <div class="note">Si ninguna regla aplica, se publica
+      <input type="number" id="fallback" value="0" min="0" style="width:70px">
+      <span id="fallbackShow" class="hide"></span>
+    </div>
+  </div>
+
+  <div class="card" id="prevCard" style="display:none">
+    <div class="step">Paso 03</div>
+    <h2>Vista previa</h2>
+    <p class="desc">Revisa antes de descargar. Nada se modifica hasta que generes el archivo.</p>
+    <div class="stats" id="stats"></div>
+    <div class="scroll"><table id="prevTable"></table></div>
+    <div class="note" id="unmatched"></div>
+  </div>
+
+  <div class="foot">
+    <button class="primary" id="go" disabled>Descargar Excel actualizado</button>
+    <span class="note" id="status" style="margin:0"></span>
+  </div>
+
+</div>
+
+<footer class="sitefoot">
+  <div>mercadostock_lite — Bodega ↔ Mercado Libre</div>
+  <a href="https://github.com/bryansuarezdev/mercadostock_lite" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    By Bryan Suarez
+  </a>
+</footer>
+
+<script src="assets/fflate.js"></script>
+<script src="assets/xlsx-io.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
