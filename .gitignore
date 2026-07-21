@@ -1,11 +1,75 @@
-# Datos de negocio — NO subir al repo.
+# ---------------------------------------------------------------
+# mercadostock_lite
+# ---------------------------------------------------------------
+
+# --- Datos de negocio: NUNCA subir --------------------------------
 # Contienen costos, márgenes, precios de compra y SKUs internos.
+# Borrarlos después NO los saca del historial de git.
 *.xlsx
+*.xlsm
 *.xls
 *.csv
+*.tsv
 
-# Capturas y temporales
-*.png
+# Archivos temporales que Excel crea al abrir un libro
+~$*
+*.xlk
+
+# Descargas generadas por la app
+*_SYNC.xlsx
+
+# --- Capturas y pruebas -------------------------------------------
+# Solo las de la raíz (capturas sueltas de trabajo).
+# Las imágenes del proyecto viven en assets/ o docs/ y SÍ se versionan.
+/*.png
+/*.jpg
+/*.jpeg
+/*.gif
+/*.webp
+/Captura*.png
 .playwright-mcp/
-.DS_Store
+test-results/
+playwright-report/
+
+# --- Dependencias y build -----------------------------------------
+node_modules/
+package-lock.json
+dist/
+build/
+.cache/
+
+# --- Entorno y secretos -------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Editores -----------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Sistema operativo --------------------------------------------
+# Windows
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+# Linux
+.directory
+.fuse_hidden*
+
+# --- Logs ---------------------------------------------------------
+*.log
+npm-debug.log*
+logs/
