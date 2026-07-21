@@ -1,62 +1,62 @@
 # mercadostock_lite
 
-Sincroniza el stock de bodega con las publicaciones de Mercado Libre.
+🚀 **[Abrir la aplicación (GitHub Pages)](https://bryansuarezdev.github.io/mercadostock_lite/)**
 
-Toma el Excel de publicaciones que exporta Mercado Libre y el Excel de stock de bodega,
-los cruza por **SKU**, aplica reglas configurables de stock y devuelve **el mismo archivo
-de Mercado Libre** con la columna de stock actualizada, listo para reimportar.
+`mercadostock_lite` es una herramienta ligera y rápida que te permite sincronizar automáticamente el stock de tu bodega con las publicaciones de Mercado Libre.
 
-## Cómo se usa
+Toma el archivo Excel de publicaciones exportado desde Mercado Libre y el archivo Excel con el stock actual de tu bodega, cruza la información utilizando el **SKU**, aplica unas reglas predefinidas y genera un nuevo archivo de Mercado Libre con la columna de stock actualizada. ¡Todo listo para que simplemente lo reimportes en Mercado Libre!
 
-1. Abre `index.html` (doble clic, o desde GitHub Pages).
-2. Arrastra el Excel de Mercado Libre (`Publicaciones-FECHA.xlsx`).
-3. Arrastra el Excel de stock de bodega (`Stock-actual_BODEGA_FECHA.xlsx`).
-4. Ajusta las reglas si hace falta y revisa la vista previa.
-5. Descarga `..._SYNC.xlsx` y súbelo a Mercado Libre.
+---
 
-Todo ocurre en el navegador. No hay servidor, no hay base de datos y ningún archivo sale del equipo.
+## 🛠️ ¿Cómo se usa?
 
-## Reglas
+1. **Entra a la aplicación web**: Accede a [https://bryansuarezdev.github.io/mercadostock_lite/](https://bryansuarezdev.github.io/mercadostock_lite/).
+2. **Carga el Excel de Mercado Libre**: Arrastra o selecciona el archivo descargado desde Mercado Libre (suele llamarse `Publicaciones-FECHA.xlsx`).
+3. **Carga el Excel de tu bodega**: Arrastra o selecciona tu archivo de stock (suele llamarse `Stock-actual_BODEGA_FECHA.xlsx`).
+4. **Configura y revisa**: Ajusta las reglas de stock (cuánto publicar dependiendo del stock real) si lo necesitas. Mira la vista previa para comprobar los cambios.
+5. **Descarga**: Presiona "Descargar Excel actualizado". Obtendrás un archivo `..._SYNC.xlsx` que puedes subir directamente de vuelta a Mercado Libre.
 
-Se evalúan de arriba hacia abajo y gana la primera que se cumple. Por defecto:
+> 🔒 **Privacidad y Seguridad**: Todo el procesamiento se hace directamente en tu navegador. **Ningún archivo se sube a ningún servidor**, garantizando que tu información comercial permanezca privada y segura en tu equipo local.
 
-| Stock en bodega | Se publica en Meli |
-| --------------- | ------------------ |
-| > 20            | 10                 |
-| > 10            | 5                  |
-| >= 5            | 1                  |
-| resto           | 0                  |
+---
 
-Son editables en pantalla (operador, umbral y valor) y quedan guardadas en el
-navegador vía `localStorage`.
+## ⚙️ Reglas de Stock
 
-## Detalles de implementación
+Para no publicar todo tu stock real y tener un margen de seguridad, la app permite configurar "reglas" lógicas. Las reglas se evalúan en orden (de arriba hacia abajo) y se aplica la primera que se cumpla.
 
-- El `.xlsx` se abre como ZIP y se editan **solo las celdas de la columna de stock**
-  en el XML de la hoja. El resto del archivo (formato, hojas, la hoja `hidden` con el
-  identificador de la cuenta) queda intacto, que es lo que Mercado Libre necesita
-  para aceptar la reimportación.
-- El cruce es por la columna `SKU` de ambos archivos.
-- Si un SKU de una publicación no existe en bodega, esa fila **se deja sin tocar**
-  en vez de mandarla a 0, y se lista aparte en la vista previa.
-- Varias publicaciones pueden compartir el mismo SKU (variantes): todas reciben
-  el mismo valor calculado.
+Por defecto vienen configuradas así:
 
-## Estructura
+| Si el stock en bodega es... | Se publica en Mercado Libre... |
+| ------------------------- | ---------------------------- |
+| Mayor a `20`                | `10` unidades                  |
+| Mayor a `10`                | `5` unidades                   |
+| Mayor o igual a `5`         | `1` unidad                     |
+| Si no aplica ninguna regla| `0` unidades (fallback)        |
 
-```
-index.html            marcado
-assets/styles.css     estilos
-assets/xlsx-io.js     lectura/escritura de .xlsx (ZIP + XML), sin lógica de negocio
-assets/app.js         carga de archivos, reglas, vista previa y descarga
-assets/fflate.js      librería de compresión (vendor)
-```
+Todas estas reglas son completamente **editables en pantalla** (puedes cambiar la condición, la cantidad o borrarlas) y se guardan en tu navegador automáticamente para la próxima vez que entres.
 
-## Publicar en GitHub Pages
+---
 
-Settings → Pages → Source: `Deploy from a branch` → rama `main`, carpeta `/ (root)`.
+## 🧠 Detalles Técnicos y Lógica
 
-## Aviso
+- **Intacto por diseño**: La aplicación edita directamente el archivo `.xlsx` (tratándolo como ZIP + XML) modificando **únicamente las celdas de la columna de stock**. Todo lo demás (formato, ID interno de cuenta en las hojas ocultas, etc.) se mantiene intacto, lo que asegura que Mercado Libre acepte el archivo de vuelta sin dar errores.
+- **Cruce por SKU**: El sistema mapea cada publicación con la bodega usando la columna `SKU`.
+- **Productos no encontrados**: Si una publicación de Mercado Libre tiene un SKU que no existe en el Excel de tu bodega, esa fila se ignora por completo (no se actualiza) y se te avisa en la vista previa.
+- **Variantes múltiples**: Si varias publicaciones distintas comparten el mismo SKU, todas recibirán la misma actualización de stock basada en tus reglas.
 
-Los Excel de stock y publicaciones están en `.gitignore`: contienen costos, márgenes
-y precios de compra. No los subas al repositorio.
+---
+
+## 📁 Estructura del Proyecto
+
+Esta es la versión modular del proyecto:
+
+- `index.html`: La interfaz principal.
+- `assets/styles.css`: Estilos visuales.
+- `assets/app.js`: La lógica central de carga, cruce de datos y generación.
+- `assets/xlsx-io.js`: Módulo para leer y modificar los ficheros `.xlsx` (ZIP/XML).
+- `assets/fflate.js`: Librería externa para manejo de archivos comprimidos.
+
+---
+
+### Aviso de Desarrollo
+*Nota: Los archivos Excel de ejemplo de publicaciones y stock (`.xlsx`, `.csv`, etc.) están incluidos en el archivo `.gitignore` para asegurar que datos de costos y márgenes no sean expuestos públicamente en el repositorio.*
